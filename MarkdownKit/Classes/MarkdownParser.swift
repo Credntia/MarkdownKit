@@ -36,21 +36,25 @@ open class MarkdownParser {
   /// Enables or disables detection of URLs even without Markdown format
   open var automaticLinkDetectionEnabled: Bool = true
   open let font: UIFont
+  open let color: UIColor
 
   // MARK: Initializer
-  public init(font: UIFont = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize),
+  public init(font: UIFont = .systemFont(ofSize: UIFont.smallSystemFontSize),
+              color: UIColor = .black,
               automaticLinkDetectionEnabled: Bool = true,
               customElements: [MarkdownElement] = []) {
-    self.font = font
 
-    header = MarkdownHeader(font: font)
-    list = MarkdownList(font: font)
-    quote = MarkdownQuote(font: font)
-    link = MarkdownLink(font: font)
-    automaticLink = MarkdownAutomaticLink(font: font)
-    bold = MarkdownBold(font: font)
-    italic = MarkdownItalic(font: font)
-    code = MarkdownCode(font: font)
+    self.font = font
+    self.color = color
+
+    header = MarkdownHeader(font: font, color: color)
+    list = MarkdownList(font: font, color: color)
+    quote = MarkdownQuote(font: font, color: color)
+    link = MarkdownLink(font: font, color: color)
+    automaticLink = MarkdownAutomaticLink(font: font, color: color)
+    bold = MarkdownBold(font: font, color: color)
+    italic = MarkdownItalic(font: font, color: color)
+    code = MarkdownCode(font: font, color: color)
 
     self.automaticLinkDetectionEnabled = automaticLinkDetectionEnabled
     self.escapingElements = [codeEscaping, escaping]
@@ -81,6 +85,8 @@ open class MarkdownParser {
   open func parse(_ markdown: NSAttributedString) -> NSAttributedString {
     let attributedString = NSMutableAttributedString(attributedString: markdown)
     attributedString.addAttribute(NSFontAttributeName, value: font,
+                                  range: NSRange(location: 0, length: attributedString.length))
+    attributedString.addAttribute(NSForegroundColorAttributeName, value: color,
                                   range: NSRange(location: 0, length: attributedString.length))
     var elements: [MarkdownElement] = escapingElements
     elements.append(contentsOf: defaultElements)
